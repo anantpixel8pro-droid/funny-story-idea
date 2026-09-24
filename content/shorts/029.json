@@ -1,0 +1,72 @@
+{
+  "id": "029",
+  "title": "Mummy ka missing thing",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Mom",
+  "flavor": "confused",
+  "image": {
+    "filename": "assets/images/029.jpg",
+    "prompt": "fictional Indian mother searching around for her phone while it is visibly in her hand, little boy pointing at it with an amused expression; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Mummy: Mera phone kahan hai?",
+      "start": 0,
+      "end": 1.43,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Aapke paas hai.",
+      "start": 1.43,
+      "end": 2.86,
+      "emphasis": false
+    },
+    {
+      "text": "Mummy: Nahi hai.",
+      "start": 2.86,
+      "end": 4.29,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Aapke haath mein.",
+      "start": 4.29,
+      "end": 5.71,
+      "emphasis": false
+    },
+    {
+      "text": "Mummy: Oh.",
+      "start": 5.71,
+      "end": 7.14,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Aap humein phone dhoondhne bolne wali thi?",
+      "start": 7.14,
+      "end": 8.57,
+      "emphasis": false
+    },
+    {
+      "text": "Mummy: Chup! 😂",
+      "start": 8.57,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "light_chaos",
+    "prompt": "light chaotic family comedy instrumental, bouncy rhythm, playful stops, upbeat but not loud, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
