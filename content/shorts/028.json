@@ -1,0 +1,60 @@
+{
+  "id": "028",
+  "title": "Chachi babysitting",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Chachi",
+  "flavor": "exhausted",
+  "image": {
+    "filename": "assets/images/028.jpg",
+    "prompt": "fictional Indian aunt confidently babysitting a playful preschool boy, later looking comically exhausted while toys are scattered around; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Chachi: Aaj main tumhe sambhalungi.",
+      "start": 0,
+      "end": 2,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Yay!",
+      "start": 2,
+      "end": 4,
+      "emphasis": false
+    },
+    {
+      "text": "Chachi: Easy hai na.",
+      "start": 4,
+      "end": 6,
+      "emphasis": false
+    },
+    {
+      "text": "1 hour later…",
+      "start": 6,
+      "end": 8,
+      "emphasis": false
+    },
+    {
+      "text": "Chachi: Tumhari mummy ko kitna salary milta hai? 😂",
+      "start": 8,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "cute_sneaky",
+    "prompt": "sneaky cute comedy instrumental, muted plucks and light percussion, playful mischief, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
