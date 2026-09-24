@@ -1,0 +1,72 @@
+{
+  "id": "005",
+  "title": "Dada ka favourite dialogue",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Dada",
+  "flavor": "proud",
+  "image": {
+    "filename": "assets/images/005.jpg",
+    "prompt": "fictional Indian grandfather proudly telling a childhood story while his preschool grandson listens with an amused face in a warm family room; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Dada: Hamare zamaane mein…",
+      "start": 0,
+      "end": 1.43,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Dada, please.",
+      "start": 1.43,
+      "end": 2.86,
+      "emphasis": false
+    },
+    {
+      "text": "Dada: Hum 5 kilometre paidal school jaate the.",
+      "start": 2.86,
+      "end": 4.29,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Haan Dada.",
+      "start": 4.29,
+      "end": 5.71,
+      "emphasis": false
+    },
+    {
+      "text": "Dada: Aur baarish mein bhi.",
+      "start": 5.71,
+      "end": 7.14,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Haan Dada.",
+      "start": 7.14,
+      "end": 8.57,
+      "emphasis": false
+    },
+    {
+      "text": "Dada: Tum log toh lift ke bina nahi ja sakte. 😂",
+      "start": 8.57,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "quirky_pizzicato",
+    "prompt": "quirky pizzicato comedy instrumental, quick playful rhythm, tiny surprise accents, family-friendly, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
