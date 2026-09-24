@@ -1,0 +1,72 @@
+{
+  "id": "022",
+  "title": "Mummy before sleep",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Mom",
+  "flavor": "sleepy",
+  "image": {
+    "filename": "assets/images/022.jpg",
+    "prompt": "fictional Indian mother looking sleepy at bedtime while her preschool son secretly watches a phone under a blanket, warm bedroom lighting; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Mummy: Kal jaldi uthna hai.",
+      "start": 0,
+      "end": 1.43,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Haan.",
+      "start": 1.43,
+      "end": 2.86,
+      "emphasis": false
+    },
+    {
+      "text": "Mummy: Phone side mein rakho.",
+      "start": 2.86,
+      "end": 4.29,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Haan.",
+      "start": 4.29,
+      "end": 5.71,
+      "emphasis": false
+    },
+    {
+      "text": "Mummy: So jao.",
+      "start": 5.71,
+      "end": 7.14,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Haan.",
+      "start": 7.14,
+      "end": 8.57,
+      "emphasis": false
+    },
+    {
+      "text": "Mummy: Tum abhi bhi phone dekh rahe ho?! 😭",
+      "start": 8.57,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "mischief_pop",
+    "prompt": "cute mischievous comedy instrumental, bouncy plucks, tiny percussion, playful family mood, no vocals, short loop"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}

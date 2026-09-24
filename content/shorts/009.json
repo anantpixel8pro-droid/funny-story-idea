@@ -1,0 +1,66 @@
+{
+  "id": "009",
+  "title": "Papa ka lost remote",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Dad",
+  "flavor": "confused",
+  "image": {
+    "filename": "assets/images/009.jpg",
+    "prompt": "fictional Indian father searching for a TV remote while holding it in his own hand, little boy pointing at it and trying not to laugh; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Papa: Remote kisne dekha?",
+      "start": 0,
+      "end": 1.67,
+      "emphasis": false
+    },
+    {
+      "text": "Sab: Nahi.",
+      "start": 1.67,
+      "end": 3.33,
+      "emphasis": false
+    },
+    {
+      "text": "Papa: TV ka remote hai.",
+      "start": 3.33,
+      "end": 5,
+      "emphasis": false
+    },
+    {
+      "text": "Sab: Nahi dekha.",
+      "start": 5,
+      "end": 6.67,
+      "emphasis": false
+    },
+    {
+      "text": "Papa: Toh TV kaise chal raha hai?",
+      "start": 6.67,
+      "end": 8.33,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Papa… aapke haath mein hai. 😂",
+      "start": 8.33,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "light_chaos",
+    "prompt": "light chaotic family comedy instrumental, bouncy rhythm, playful stops, upbeat but not loud, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}

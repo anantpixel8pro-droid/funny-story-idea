@@ -1,0 +1,66 @@
+{
+  "id": "027",
+  "title": "Nana ka childhood story",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Nana",
+  "flavor": "proud",
+  "image": {
+    "filename": "assets/images/027.jpg",
+    "prompt": "fictional Indian grandfather proudly telling a childhood story to his grandson, grandson looking skeptical and amused, warm family room; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Nana: Main tumhari age mein bahut shararti tha.",
+      "start": 0,
+      "end": 1.67,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Really?",
+      "start": 1.67,
+      "end": 3.33,
+      "emphasis": false
+    },
+    {
+      "text": "Nana: Bahut!",
+      "start": 3.33,
+      "end": 5,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Kya karte the?",
+      "start": 5,
+      "end": 6.67,
+      "emphasis": false
+    },
+    {
+      "text": "Nana: Sabse pehle homework karta tha.",
+      "start": 6.67,
+      "end": 8.33,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Ye shararat kab thi? 😂",
+      "start": 8.33,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "comic_stomp",
+    "prompt": "comic stomp instrumental, light bass and playful percussion, exaggerated tiny accents, family-friendly, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}

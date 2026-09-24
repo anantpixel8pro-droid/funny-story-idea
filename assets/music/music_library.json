@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "duration_seconds": 10,
+  "tracks": [
+    {
+      "name": "bouncy_family",
+      "file": "assets/music/bouncy_family.wav",
+      "prompt": "playful bouncy family comedy instrumental, light marimba and pizzicato, mischievous but warm, no vocals, no recognizable melody, seamless 10 second loop"
+    },
+    {
+      "name": "mischief_pop",
+      "file": "assets/music/mischief_pop.wav",
+      "prompt": "cute mischievous comedy instrumental, bouncy plucks, tiny percussion, playful family mood, no vocals, short loop"
+    },
+    {
+      "name": "sleepy_comedy",
+      "file": "assets/music/sleepy_comedy.wav",
+      "prompt": "sleepy funny instrumental, soft bells, gentle brushed percussion, sleepy morning comedy, no vocals, short loop"
+    },
+    {
+      "name": "desi_playful",
+      "file": "assets/music/desi_playful.wav",
+      "prompt": "light Indian family comedy instrumental, playful hand percussion, bright plucks, warm modern sound, no vocals, no copyrighted melody"
+    },
+    {
+      "name": "quirky_pizzicato",
+      "file": "assets/music/quirky_pizzicato.wav",
+      "prompt": "quirky pizzicato comedy instrumental, quick playful rhythm, tiny surprise accents, family-friendly, no vocals"
+    },
+    {
+      "name": "warm_family_groove",
+      "file": "assets/music/warm_family_groove.wav",
+      "prompt": "warm cheerful family instrumental, soft guitar and plucks, gentle percussion, wholesome comedy, no vocals"
+    },
+    {
+      "name": "comic_stomp",
+      "file": "assets/music/comic_stomp.wav",
+      "prompt": "comic stomp instrumental, light bass and playful percussion, exaggerated tiny accents, family-friendly, no vocals"
+    },
+    {
+      "name": "cute_sneaky",
+      "file": "assets/music/cute_sneaky.wav",
+      "prompt": "sneaky cute comedy instrumental, muted plucks and light percussion, playful mischief, no vocals"
+    },
+    {
+      "name": "light_chaos",
+      "file": "assets/music/light_chaos.wav",
+      "prompt": "light chaotic family comedy instrumental, bouncy rhythm, playful stops, upbeat but not loud, no vocals"
+    },
+    {
+      "name": "happy_snap",
+      "file": "assets/music/happy_snap.wav",
+      "prompt": "happy snap comedy instrumental, claps, plucks and tiny percussion, bright family-friendly mood, no vocals"
+    }
+  ]
+}
