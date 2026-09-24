@@ -1,0 +1,66 @@
+{
+  "id": "001",
+  "title": "Mummy ke rules",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Mom",
+  "flavor": "angry",
+  "image": {
+    "filename": "assets/images/001.jpg",
+    "prompt": "fictional Indian preschool boy in a bright living room, crayons near a wall, looking mischievous while his mother gives a playful warning; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Mummy: Diwaar pe nahi likhna!",
+      "start": 0,
+      "end": 1.67,
+      "emphasis": false
+    },
+    {
+      "text": "Drawer nahi kholna!",
+      "start": 1.67,
+      "end": 3.33,
+      "emphasis": false
+    },
+    {
+      "text": "Bed pe nahi kudna!",
+      "start": 3.33,
+      "end": 5,
+      "emphasis": false
+    },
+    {
+      "text": "Fridge baar-baar nahi kholna!",
+      "start": 5,
+      "end": 6.67,
+      "emphasis": false
+    },
+    {
+      "text": "Switchboard ko haath nahi lagana!",
+      "start": 6.67,
+      "end": 8.33,
+      "emphasis": false
+    },
+    {
+      "text": "Phir mummy: Tum poora din karte kya ho?",
+      "start": 8.33,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "bouncy_family",
+    "prompt": "playful bouncy family comedy instrumental, light marimba and pizzicato, mischievous but warm, no vocals, no recognizable melody, seamless 10 second loop"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
