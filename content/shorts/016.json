@@ -1,0 +1,66 @@
+{
+  "id": "016",
+  "title": "Papa ka charger",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Dad",
+  "flavor": "angry",
+  "image": {
+    "filename": "assets/images/016.jpg",
+    "prompt": "fictional Indian father looking around for a phone charger while it is visibly connected to his own phone, little boy trying not to laugh; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Papa: Mera charger kisne liya?",
+      "start": 0,
+      "end": 1.67,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Maine nahi.",
+      "start": 1.67,
+      "end": 3.33,
+      "emphasis": false
+    },
+    {
+      "text": "Papa: Phir kaun?",
+      "start": 3.33,
+      "end": 5,
+      "emphasis": false
+    },
+    {
+      "text": "Sab chup.",
+      "start": 5,
+      "end": 6.67,
+      "emphasis": false
+    },
+    {
+      "text": "Papa: Mera charger kahan hai?",
+      "start": 6.67,
+      "end": 8.33,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Papa… phone mein laga hua hai. 😭",
+      "start": 8.33,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "warm_family_groove",
+    "prompt": "warm cheerful family instrumental, soft guitar and plucks, gentle percussion, wholesome comedy, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
