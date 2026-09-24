@@ -1,0 +1,66 @@
+{
+  "id": "013",
+  "title": "Nana ka afternoon nap",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Nana",
+  "flavor": "sleepy",
+  "image": {
+    "filename": "assets/images/013.jpg",
+    "prompt": "fictional Indian grandfather dozing in an armchair with a newspaper on his lap while his grandson looks suspiciously amused, afternoon sunlight; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Nana: Main bas aankhein band kar raha hoon.",
+      "start": 0,
+      "end": 1.67,
+      "emphasis": false
+    },
+    {
+      "text": "5 minute later…",
+      "start": 1.67,
+      "end": 3.33,
+      "emphasis": false
+    },
+    {
+      "text": "Nana: Main soya nahi tha.",
+      "start": 3.33,
+      "end": 5,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Nana, aap kharrate le rahe the.",
+      "start": 5,
+      "end": 6.67,
+      "emphasis": false
+    },
+    {
+      "text": "Nana: Main newspaper padh raha tha.",
+      "start": 6.67,
+      "end": 8.33,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Aankhein band karke? 😂",
+      "start": 8.33,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "sleepy_comedy",
+    "prompt": "sleepy funny instrumental, soft bells, gentle brushed percussion, sleepy morning comedy, no vocals, short loop"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
