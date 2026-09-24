@@ -1,0 +1,72 @@
+{
+  "id": "026",
+  "title": "Dada ka chai break",
+  "duration_seconds": 10,
+  "aspect_ratio": "9:16",
+  "resolution": [
+    1080,
+    1920
+  ],
+  "role": "Dada",
+  "flavor": "sleepy",
+  "image": {
+    "filename": "assets/images/026.jpg",
+    "prompt": "fictional Indian grandfather holding a cup of chai in an armchair looking extremely sleepy while his grandson waits for the promised walk, cozy afternoon home; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+  },
+  "captions": [
+    {
+      "text": "Dada: Chai ke baad walk karunga.",
+      "start": 0,
+      "end": 1.43,
+      "emphasis": false
+    },
+    {
+      "text": "Chai aa gayi.",
+      "start": 1.43,
+      "end": 2.86,
+      "emphasis": false
+    },
+    {
+      "text": "Dada: Pehle chai.",
+      "start": 2.86,
+      "end": 4.29,
+      "emphasis": false
+    },
+    {
+      "text": "Chai khatam.",
+      "start": 4.29,
+      "end": 5.71,
+      "emphasis": false
+    },
+    {
+      "text": "Dada: Thoda rest kar leta hoon.",
+      "start": 5.71,
+      "end": 7.14,
+      "emphasis": false
+    },
+    {
+      "text": "10 minute later…",
+      "start": 7.14,
+      "end": 8.57,
+      "emphasis": false
+    },
+    {
+      "text": "Me: Dada, walk? 😴",
+      "start": 8.57,
+      "end": 10,
+      "emphasis": true
+    }
+  ],
+  "music": {
+    "name": "warm_family_groove",
+    "prompt": "warm cheerful family instrumental, soft guitar and plucks, gentle percussion, wholesome comedy, no vocals"
+  },
+  "render": {
+    "zoom_start": 1,
+    "zoom_end": 1.08,
+    "caption_position": "center",
+    "font_size": 62,
+    "stroke_width": 5
+  }
+}
