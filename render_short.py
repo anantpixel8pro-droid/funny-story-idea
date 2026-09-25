@@ -57,7 +57,7 @@ def music_path(cfg):
             p=ROOT/track["file"]; return p if p.exists() else None
     p=ROOT/"assets/music"/f"{name}.wav"; return p if p.exists() else None
 
-def _api_json(url,payload=None,headers=None,timeout=60):
+def _api_json(url,payload=None,headers=None,timeout=3600):
     data=None
     h={"Content-Type":"application/json"}
     if headers: h.update(headers)
@@ -66,7 +66,7 @@ def _api_json(url,payload=None,headers=None,timeout=60):
     with urllib.request.urlopen(req,timeout=timeout) as r:
         return json.loads(r.read().decode("utf-8"))
 
-def _api_download(url,out,timeout=120):
+def _api_download(url,out,timeout=1200):
     req=urllib.request.Request(url,method="GET")
     with urllib.request.urlopen(req,timeout=timeout) as r, open(out,"wb") as f:
         f.write(r.read())
@@ -92,7 +92,7 @@ def generate_music_api(cfg,out):
     data=response.get("data",response)
     task_id=data.get("task_id") if isinstance(data,dict) else None
     if not task_id: raise RuntimeError(f"ACE-Step release_task failed: {response}")
-    deadline=time.time()+float(os.getenv("ACESTEP_TIMEOUT","600"))
+    deadline=time.time()+float(os.getenv("ACESTEP_TIMEOUT","3600"))
     while time.time()<deadline:
         result=_api_json(f"{base}/query_result",{"task_id_list":[task_id]},headers)
         rows=result.get("data",result)
@@ -124,7 +124,7 @@ def generate_music_api(cfg,out):
             if out.exists() and out.stat().st_size>0: return
             raise RuntimeError("ACE-Step audio download produced an empty file.")
         time.sleep(float(os.getenv("ACESTEP_POLL_INTERVAL","2")))
-    raise TimeoutError(f"ACE-Step generation timed out after {os.getenv('ACESTEP_TIMEOUT','600')} seconds.")
+    raise TimeoutError(f"ACE-Step generation timed out after {os.getenv('ACESTEP_TIMEOUT','3600')} seconds.")
 
 def generate_music(cfg,out):
     out.parent.mkdir(parents=True,exist_ok=True)
