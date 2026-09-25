@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse,json,os,shlex,subprocess,tempfile
+import argparse,json,os,shlex,subprocess,tempfile,time,urllib.parse,urllib.request
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont
 ROOT=Path(__file__).resolve().parent
@@ -57,11 +57,77 @@ def music_path(cfg):
             p=ROOT/track["file"]; return p if p.exists() else None
     p=ROOT/"assets/music"/f"{name}.wav"; return p if p.exists() else None
 
+def _api_json(url,payload=None,headers=None,timeout=60):
+    data=None
+    h={"Content-Type":"application/json"}
+    if headers: h.update(headers)
+    if payload is not None: data=json.dumps(payload).encode("utf-8")
+    req=urllib.request.Request(url,data=data,headers=h,method="POST" if data is not None else "GET")
+    with urllib.request.urlopen(req,timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+def _api_download(url,out,timeout=120):
+    req=urllib.request.Request(url,method="GET")
+    with urllib.request.urlopen(req,timeout=timeout) as r, open(out,"wb") as f:
+        f.write(r.read())
+
+def _acestep_api_url():
+    return os.getenv("ACESTEP_API_URL","http://localhost:7860").rstrip("/")
+
+def generate_music_api(cfg,out):
+    base=_acestep_api_url(); duration=float(cfg["duration_seconds"])
+    payload={
+        "prompt":cfg["music"]["prompt"],
+        "lyrics":"[inst]",
+        "audio_duration":duration,
+        "thinking":False,
+        "inference_steps":8,
+        "batch_size":1,
+    }
+    token=os.getenv("ACESTEP_API_KEY")
+    headers={"Authorization":f"Bearer {token}"} if token else None
+    print(f"Generating missing music via ACE-Step API: {base}")
+    response=_api_json(f"{base}/release_task",payload,headers)
+    data=response.get("data",response)
+    task_id=data.get("task_id") if isinstance(data,dict) else None
+    if not task_id: raise RuntimeError(f"ACE-Step release_task failed: {response}")
+    deadline=time.time()+float(os.getenv("ACESTEP_TIMEOUT","600"))
+    while time.time()<deadline:
+        result=_api_json(f"{base}/query_result",{"task_id_list":[task_id]},headers)
+        rows=result.get("data",result)
+        row=rows[0] if isinstance(rows,list) and rows else rows
+        status=row.get("status") if isinstance(row,dict) else 0
+        if status==2: raise RuntimeError(f"ACE-Step generation failed: {row}")
+        if status==1:
+            raw=row.get("result","[]")
+            try: items=json.loads(raw) if isinstance(raw,str) else raw
+            except json.JSONDecodeError as e: raise RuntimeError(f"Invalid ACE-Step result: {raw}") from e
+            if not items: raise RuntimeError(f"ACE-Step returned no audio: {row}")
+            item=items[0] if isinstance(items,list) else items
+            audio=item.get("file") if isinstance(item,dict) else None
+            if not audio: raise RuntimeError(f"ACE-Step result has no audio file: {item}")
+            if audio.startswith("http://") or audio.startswith("https://"):
+                audio_url=audio
+            else:
+                audio_url=base+audio if audio.startswith("/") else f"{base}/{audio}"
+            _api_download(audio_url,out)
+            if out.exists() and out.stat().st_size>0: return
+            raise RuntimeError("ACE-Step audio download produced an empty file.")
+        time.sleep(float(os.getenv("ACESTEP_POLL_INTERVAL","2")))
+    raise TimeoutError(f"ACE-Step generation timed out after {os.getenv('ACESTEP_TIMEOUT','600')} seconds.")
+
 def generate_music(cfg,out):
-    template=os.getenv("ACESTEP_COMMAND")
-    if not template: raise RuntimeError("Missing music. Add the WAV to assets/music or set ACESTEP_COMMAND.")
-    run(["/bin/sh","-lc",template.format(prompt=cfg["music"]["prompt"],output=str(out),duration=cfg["duration_seconds"])])
-    if not out.exists(): raise RuntimeError("Music command did not create "+str(out))
+    out.parent.mkdir(parents=True,exist_ok=True)
+    # Prefer the local ACE-Step API. The CLI remains an optional fallback for older setups.
+    try:
+        generate_music_api(cfg,out); return
+    except Exception as api_error:
+        template=os.getenv("ACESTEP_COMMAND")
+        if not template:
+            raise RuntimeError(f"ACE-Step API generation failed: {api_error}") from api_error
+        print(f"ACE-Step API unavailable/failed; falling back to ACESTEP_COMMAND: {api_error}")
+        run(["/bin/sh","-lc",template.format(prompt=cfg["music"]["prompt"],output=str(out),duration=cfg["duration_seconds"])])
+        if not out.exists(): raise RuntimeError("Music command did not create "+str(out))
 
 def render(cfg,image_path,music,out):
     W,H=cfg["resolution"]; duration=float(cfg["duration_seconds"]); img=Image.open(image_path).convert("RGB"); out.parent.mkdir(parents=True,exist_ok=True)
@@ -77,11 +143,10 @@ def render(cfg,image_path,music,out):
         run(["ffmpeg","-y","-stream_loop","-1","-i",str(music),"-i",str(silent),"-t",str(duration),"-map","1:v:0","-map","0:a:0","-c:v","copy","-c:a","aac","-b:a","192k","-shortest","-movflags","+faststart",str(out)])
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("json",type=Path); ap.add_argument("--image",type=Path); ap.add_argument("--music",type=Path); ap.add_argument("--output",type=Path); ap.add_argument("--generate-missing-music",action="store_true")
+    ap=argparse.ArgumentParser(); ap.add_argument("json",type=Path); ap.add_argument("--image",type=Path); ap.add_argument("--music",type=Path); ap.add_argument("--output",type=Path); ap.add_argument("--generate-missing-music",action="store_true",help="Deprecated: missing music is generated automatically.")
     a=ap.parse_args(); cfg=json.loads(a.json.read_text()); image=a.image or ROOT/cfg["image"]["filename"]; music=a.music or music_path(cfg)
     if not image.exists(): raise FileNotFoundError(f"Image not found: {image}")
     if music is None:
-        if not a.generate_missing_music: raise FileNotFoundError(f"Music '{cfg['music']['name']}' not found.")
         music=ROOT/"assets/music"/f"{cfg['music']['name']}.wav"; generate_music(cfg,music)
     out=a.output or ROOT/"output"/f"{cfg['id']}.mp4"; render(cfg,image,music,out); print("READY:",out)
 
