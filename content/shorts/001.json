@@ -10,7 +10,7 @@
   "role": "Mom",
   "flavor": "angry",
   "image": {
-    "filename": "assets/images/001.jpg",
+    "filename": "assets/images/001.png",
     "prompt": "fictional Indian preschool boy in a bright living room, crayons near a wall, looking mischievous while his mother gives a playful warning; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
     "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
   },
