@@ -83,6 +83,7 @@ def generate_music_api(cfg,out):
         "thinking":False,
         "inference_steps":8,
         "batch_size":1,
+        "audio_format":"wav",
     }
     token=os.getenv("ACESTEP_API_KEY")
     headers={"Authorization":f"Bearer {token}"} if token else None
@@ -106,10 +107,19 @@ def generate_music_api(cfg,out):
             item=items[0] if isinstance(items,list) else items
             audio=item.get("file") if isinstance(item,dict) else None
             if not audio: raise RuntimeError(f"ACE-Step result has no audio file: {item}")
+            # query_result may return either a complete /v1/audio?path=... URL
+            # or the absolute server-side audio path. A raw path must be wrapped
+            # with the API's /v1/audio endpoint; concatenating it to the base URL
+            # would produce a 404.
             if audio.startswith("http://") or audio.startswith("https://"):
                 audio_url=audio
+            elif audio.startswith("/v1/audio?"):
+                audio_url=base+audio
+            elif audio.startswith("/v1/audio"):
+                audio_url=base+audio
             else:
-                audio_url=base+audio if audio.startswith("/") else f"{base}/{audio}"
+                audio_url=f"{base}/v1/audio?path={urllib.parse.quote(audio, safe='')}"
+            print("Downloading generated audio:", audio_url)
             _api_download(audio_url,out)
             if out.exists() and out.stat().st_size>0: return
             raise RuntimeError("ACE-Step audio download produced an empty file.")
