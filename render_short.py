@@ -143,11 +143,10 @@ def render(cfg,image_path,music,out):
         run(["ffmpeg","-y","-stream_loop","-1","-i",str(music),"-i",str(silent),"-t",str(duration),"-map","1:v:0","-map","0:a:0","-c:v","copy","-c:a","aac","-b:a","192k","-shortest","-movflags","+faststart",str(out)])
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("json",type=Path); ap.add_argument("--image",type=Path); ap.add_argument("--music",type=Path); ap.add_argument("--output",type=Path); ap.add_argument("--generate-missing-music",action="store_true")
+    ap=argparse.ArgumentParser(); ap.add_argument("json",type=Path); ap.add_argument("--image",type=Path); ap.add_argument("--music",type=Path); ap.add_argument("--output",type=Path); ap.add_argument("--generate-missing-music",action="store_true",help="Deprecated: missing music is generated automatically.")
     a=ap.parse_args(); cfg=json.loads(a.json.read_text()); image=a.image or ROOT/cfg["image"]["filename"]; music=a.music or music_path(cfg)
     if not image.exists(): raise FileNotFoundError(f"Image not found: {image}")
     if music is None:
-        if not a.generate_missing_music: raise FileNotFoundError(f"Music '{cfg['music']['name']}' not found. Run with --generate-missing-music to create it via ACE-Step.")
         music=ROOT/"assets/music"/f"{cfg['music']['name']}.wav"; generate_music(cfg,music)
     out=a.output or ROOT/"output"/f"{cfg['id']}.mp4"; render(cfg,image,music,out); print("READY:",out)
 
