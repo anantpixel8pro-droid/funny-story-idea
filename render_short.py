@@ -144,9 +144,9 @@ def render(cfg,image_path,music,out):
     with tempfile.TemporaryDirectory(prefix="funny_short_") as td:
         frames=Path(td)/"frames"; frames.mkdir()
         for n in range(round(duration*FPS)):
-            t=n/FPS; active=cfg["captions"][-1]
-            for c in cfg["captions"]:
-                if float(c["start"])<=t<float(c["end"]): active=c; break
+            t=n/FPS
+            # Keep the complete caption list visible from the first frame.
+            active={"text":"\n".join(c["text"] for c in cfg["captions"]), "emphasis":False}
             make_frame(img,cfg,active,t).save(frames/f"{n:06d}.jpg",quality=95)
         silent=Path(td)/"silent.mp4"
         run(["ffmpeg","-y","-framerate",str(FPS),"-i",str(frames/"%06d.jpg"),"-c:v","libx264","-preset","veryfast","-crf","18","-pix_fmt","yuv420p","-movflags","+faststart",str(silent)])
