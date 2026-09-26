@@ -33,14 +33,30 @@ def wrap(draw,text,fnt,max_width):
     return out or [text]
 
 def draw_caption(frame,text,y,size,stroke,emphasis):
-    draw=ImageDraw.Draw(frame); fnt=ImageFont.truetype(font_path(),int(size*(1.10 if emphasis else 1)))
+    draw=ImageDraw.Draw(frame)
     lines=text.split("\n") if "\n" in text else [text]
-    gap=8
-    heights=[draw.textbbox((0,0),x,font=fnt,stroke_width=stroke)[3] for x in lines]
-    lh=max(heights); total=len(lines)*lh+(len(lines)-1)*gap; yy=y-total/2
+    # Keep each caption on exactly one visual line. Reduce the font uniformly
+    # until the longest line fits inside a safe 90% of the frame width.
+    requested=int(size*(1.10 if emphasis else 1))
+    max_width=int(frame.width*0.90)
+    font_size=requested
+    while font_size>24:
+        fnt=ImageFont.truetype(font_path(),font_size)
+        widths=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[2] for line in lines]
+        if max(widths,default=0)<=max_width:
+            break
+        font_size-=2
+    fnt=ImageFont.truetype(font_path(),font_size)
+    gap=max(16,int(font_size*0.28))
+    heights=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[3] for line in lines]
+    line_h=max(heights,default=font_size)
+    total=len(lines)*line_h+(len(lines)-1)*gap
+    yy=y-total/2
     for line in lines:
-        box=draw.textbbox((0,0),line,font=fnt,stroke_width=stroke); x=(frame.width-(box[2]-box[0]))/2
-        draw.text((x,yy),line,font=fnt,fill="white",stroke_width=stroke,stroke_fill="black"); yy+=lh+gap
+        box=draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)
+        x=(frame.width-(box[2]-box[0]))/2
+        draw.text((x,yy),line,font=fnt,fill="white",stroke_width=stroke,stroke_fill="black")
+        yy+=line_h+gap
 
 def make_frame(img,cfg,c,t):
     W,H=cfg["resolution"]; duration=float(cfg["duration_seconds"])
