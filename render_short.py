@@ -34,7 +34,8 @@ def wrap(draw,text,fnt,max_width):
 
 def draw_caption(frame,text,y,size,stroke,emphasis):
     draw=ImageDraw.Draw(frame); fnt=ImageFont.truetype(font_path(),int(size*(1.10 if emphasis else 1)))
-    lines=wrap(draw,text,fnt,frame.width-110); gap=8
+    lines=text.split("\n") if "\n" in text else [text]
+    gap=8
     heights=[draw.textbbox((0,0),x,font=fnt,stroke_width=stroke)[3] for x in lines]
     lh=max(heights); total=len(lines)*lh+(len(lines)-1)*gap; yy=y-total/2
     for line in lines:
@@ -47,7 +48,10 @@ def make_frame(img,cfg,c,t):
     zw,zh=round(W*zoom),round(H*zoom); big=fit_cover(img,(zw,zh)); x,y=(zw-W)//2,(zh-H)//2
     frame=big.crop((x,y,x+W,y+H)).convert("RGB")
     cy={"upper":H*.28,"center":H*.50,"lower":H*.72}.get(cfg["render"].get("caption_position","center"),H*.50)
-    draw_caption(frame,c["text"],cy,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",5)),bool(c.get("emphasis")))
+    if "lines" in c:
+        draw_caption(frame,"\n".join(c["lines"]),cy,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",5)),bool(c.get("emphasis")))
+    else:
+        draw_caption(frame,c["text"],cy,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",5)),bool(c.get("emphasis")))
     return frame
 
 def music_path(cfg):
@@ -145,8 +149,10 @@ def render(cfg,image_path,music,out):
         frames=Path(td)/"frames"; frames.mkdir()
         for n in range(round(duration*FPS)):
             t=n/FPS
-            # Keep the complete caption list visible from the first frame.
-            active={"text":"\n".join(c["text"] for c in cfg["captions"]), "emphasis":False}
+            # Keep every caption as its own single line, visible from the first frame.
+            # Do not word-wrap a caption; the source JSON is expected to contain
+            # short punchy lines that fit within the frame width.
+            active={"lines":[c["text"] for c in cfg["captions"]], "emphasis":False}
             make_frame(img,cfg,active,t).save(frames/f"{n:06d}.jpg",quality=95)
         silent=Path(td)/"silent.mp4"
         run(["ffmpeg","-y","-framerate",str(FPS),"-i",str(frames/"%06d.jpg"),"-c:v","libx264","-preset","veryfast","-crf","18","-pix_fmt","yuv420p","-movflags","+faststart",str(silent)])
