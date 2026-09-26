@@ -32,31 +32,68 @@ def wrap(draw,text,fnt,max_width):
     if cur: out.append(cur)
     return out or [text]
 
-def draw_caption(frame,text,y,size,stroke,emphasis):
+def draw_caption(frame, lines, y, size, stroke, intro=None):
     draw=ImageDraw.Draw(frame)
-    lines=text.split("\n") if "\n" in text else [text]
-    # Keep each caption on exactly one visual line. Reduce the font uniformly
-    # until the longest line fits inside a safe 90% of the frame width.
-    requested=int(size*(1.10 if emphasis else 1))
-    max_width=int(frame.width*0.90)
+    side_margin=int(frame.width*0.06)
+    max_width=frame.width-(side_margin*2)
+    requested=int(size)
     font_size=requested
-    while font_size>24:
+
+    # Allow a long caption to wrap when it genuinely cannot fit on one line.
+    # Keep the font large enough to read, but never let text run off-screen.
+    while font_size>30:
         fnt=ImageFont.truetype(font_path(),font_size)
-        widths=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[2] for line in lines]
-        if max(widths,default=0)<=max_width:
+        test_widths=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[2] for line in ([intro] if intro else [])+lines]
+        if max(test_widths,default=0)<=max_width:
             break
         font_size-=2
     fnt=ImageFont.truetype(font_path(),font_size)
-    gap=max(16,int(font_size*0.28))
-    heights=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[3] for line in lines]
-    line_h=max(heights,default=font_size)
-    total=len(lines)*line_h+(len(lines)-1)*gap
-    yy=y-total/2
+
+    def wrap_line(text):
+        words=text.split()
+        wrapped=[]
+        cur=""
+        for word in words:
+            candidate=word if not cur else cur+" "+word
+            if draw.textbbox((0,0),candidate,font=fnt,stroke_width=stroke)[2] <= max_width:
+                cur=candidate
+            else:
+                if cur:
+                    wrapped.append(cur)
+                cur=word
+        if cur:
+            wrapped.append(cur)
+        return wrapped or [""]
+
+    paragraphs=[]
+    if intro:
+        paragraphs.append(("intro", wrap_line(intro)))
     for line in lines:
-        box=draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)
-        x=(frame.width-(box[2]-box[0]))/2
-        draw.text((x,yy),line,font=fnt,fill="white",stroke_width=stroke,stroke_fill="black")
-        yy+=line_h+gap
+        paragraphs.append(("line", wrap_line(line)))
+
+    line_gap=30
+    intro_gap=42
+    text_h=[]
+    for kind,wrapped in paragraphs:
+        for j,_ in enumerate(wrapped):
+            text_h.append((kind,j,len(wrapped)))
+    line_height=max(draw.textbbox((0,0),"Ag",font=fnt,stroke_width=stroke)[3],font_size)
+    total=sum(line_height for _ in text_h)
+    for i,(kind,j,wrapped_len) in enumerate(text_h[:-1]):
+        if j==wrapped_len-1:
+            total += intro_gap if kind=="intro" else line_gap
+    yy=y-total/2
+
+    for p_index,(kind,wrapped) in enumerate(paragraphs):
+        for j,line in enumerate(wrapped):
+            draw.text((side_margin,yy),line,font=fnt,fill="white",
+                      stroke_width=stroke,stroke_fill="black")
+            yy += line_height
+            if j < len(wrapped)-1:
+                yy += 6
+        if p_index < len(paragraphs)-1:
+            yy += intro_gap if kind=="intro" else line_gap
+
 
 def make_frame(img,cfg,c,t):
     W,H=cfg["resolution"]; duration=float(cfg["duration_seconds"])
@@ -65,9 +102,20 @@ def make_frame(img,cfg,c,t):
     frame=big.crop((x,y,x+W,y+H)).convert("RGB")
     cy={"upper":H*.28,"center":H*.50,"lower":H*.72}.get(cfg["render"].get("caption_position","center"),H*.50)
     if "lines" in c:
-        draw_caption(frame,"\n".join(c["lines"]),cy,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",5)),bool(c.get("emphasis")))
+        role=str(cfg.get("role","")).lower()
+        intro_map={
+            "mom":"Mummy har samay kehti rehti hai...",
+            "dad":"Papa har samay kehte rehte hain...",
+            "dadi":"Dadi har samay kehti rehti hain...",
+            "nani":"Nani har samay kehti rehti hain...",
+            "dada":"Dada har samay kehte rehte hain...",
+            "nana":"Nana har samay kehte rehte hain...",
+            "chachi":"Chachi har samay kehti rehti hain...",
+        }
+        intro=intro_map.get(role)
+        draw_caption(frame,c["lines"],cy,int(cfg["render"].get("font_size",50)),int(cfg["render"].get("stroke_width",4)),intro)
     else:
-        draw_caption(frame,c["text"],cy,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",5)),bool(c.get("emphasis")))
+        draw_caption(frame,[c["text"]],cy,int(cfg["render"].get("font_size",50)),int(cfg["render"].get("stroke_width",4)))
     return frame
 
 def music_path(cfg):
