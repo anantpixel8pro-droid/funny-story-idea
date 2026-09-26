@@ -11,8 +11,8 @@
   "flavor": "angry",
   "image": {
     "filename": "assets/images/001.png",
-    "prompt": "fictional Indian preschool boy in a bright living room, crayons near a wall, looking mischievous while his mother gives a playful warning; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
-    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, text, subtitles, logo, watermark"
+    "prompt": "fictional Indian preschool boy in a bright Indian living room beside a wall with crayons, looking mischievous after drawing on the wall; his mother stands nearby with a calm, mildly exasperated but affectionate expression, gently pointing toward the wall in a non-threatening way; relaxed open hand, no raised hand, no hitting, no spanking, no physical punishment, wholesome everyday family comedy; photorealistic candid family photograph, natural skin texture, realistic proportions, authentic Indian home, soft natural lighting, clean uncluttered upper-left wall area reserved for captions, child positioned lower/right so his face is not covered by text, expressive but believable faces, vertical 9:16, no text, no subtitles, no logo, no watermark",
+    "negative_prompt": "cartoon, illustration, CGI, 3D render, plastic skin, deformed hands, extra fingers, duplicate people, distorted face, angry threatening pose, raised hand, hitting, spanking, physical punishment, violence, scary expression, text, subtitles, logo, watermark"
   },
   "captions": [
     {
@@ -59,8 +59,9 @@
   "render": {
     "zoom_start": 1,
     "zoom_end": 1.08,
-    "caption_position": "center",
-    "font_size": 62,
-    "stroke_width": 5
+    "caption_position": "upper",
+    "font_size": 46,
+    "stroke_width": 3,
+    "caption_top": 0.07
   }
 }

@@ -32,24 +32,20 @@ def wrap(draw,text,fnt,max_width):
     if cur: out.append(cur)
     return out or [text]
 
-def draw_caption(frame, lines, y, size, stroke, intro=None):
+def draw_caption(frame, lines, y, size, stroke, intro=None, anchor="center"):
     draw=ImageDraw.Draw(frame)
     side_margin=int(frame.width*0.06)
     max_width=frame.width-(side_margin*2)
-    requested=int(size)
-    font_size=requested
 
-    # Allow a long caption to wrap when it genuinely cannot fit on one line.
-    # Keep the font large enough to read, but never let text run off-screen.
-    while font_size>30:
-        fnt=ImageFont.truetype(font_path(),font_size)
-        test_widths=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[2] for line in ([intro] if intro else [])+lines]
-        if max(test_widths,default=0)<=max_width:
-            break
-        font_size-=2
+    # Keep captions comfortably readable. The JSON files historically used 62px,
+    # but that is too large once all lines are visible together on a 9:16 frame.
+    font_size=min(int(size), 46)
+    font_size=max(font_size, 34)
     fnt=ImageFont.truetype(font_path(),font_size)
 
     def wrap_line(text):
+        # Preserve normal lines as one line. Only wrap when the complete sentence
+        # genuinely cannot fit inside the safe text width.
         words=text.split()
         wrapped=[]
         cur=""
@@ -73,25 +69,33 @@ def draw_caption(frame, lines, y, size, stroke, intro=None):
 
     line_gap=30
     intro_gap=42
-    text_h=[]
-    for kind,wrapped in paragraphs:
-        for j,_ in enumerate(wrapped):
-            text_h.append((kind,j,len(wrapped)))
-    line_height=max(draw.textbbox((0,0),"Ag",font=fnt,stroke_width=stroke)[3],font_size)
-    total=sum(line_height for _ in text_h)
-    for i,(kind,j,wrapped_len) in enumerate(text_h[:-1]):
-        if j==wrapped_len-1:
-            total += intro_gap if kind=="intro" else line_gap
-    yy=y-total/2
-
-    for p_index,(kind,wrapped) in enumerate(paragraphs):
+    wrapped_lines=[]
+    for kind, wrapped in paragraphs:
         for j,line in enumerate(wrapped):
-            draw.text((side_margin,yy),line,font=fnt,fill="white",
-                      stroke_width=stroke,stroke_fill="black")
-            yy += line_height
-            if j < len(wrapped)-1:
-                yy += 6
-        if p_index < len(paragraphs)-1:
+            wrapped_lines.append((kind,j,len(wrapped),line))
+
+    line_height=max(draw.textbbox((0,0),"Ag",font=fnt,stroke_width=stroke)[3],font_size)
+    total=sum(line_height for _ in wrapped_lines)
+    for kind,j,count,_ in wrapped_lines[:-1]:
+        if j==count-1:
+            total += intro_gap if kind=="intro" else line_gap
+
+    if anchor=="top":
+        yy=y
+    else:
+        yy=y-total/2
+
+    for index,(kind,j,count,line) in enumerate(wrapped_lines):
+        # A compact shadow keeps white text readable on both bright walls and faces
+        # without adding a heavy caption box over the photograph.
+        draw.text((side_margin+2,yy+2),line,font=fnt,fill="black",
+                  stroke_width=max(2,stroke-1),stroke_fill="black")
+        draw.text((side_margin,yy),line,font=fnt,fill="white",
+                  stroke_width=stroke,stroke_fill="black")
+        yy += line_height
+        if j < count-1:
+            yy += 6
+        elif index < len(wrapped_lines)-1:
             yy += intro_gap if kind=="intro" else line_gap
 
 
@@ -100,7 +104,17 @@ def make_frame(img,cfg,c,t):
     z0=float(cfg["render"].get("zoom_start",1)); z1=float(cfg["render"].get("zoom_end",1.08)); zoom=z0+(z1-z0)*(t/duration)
     zw,zh=round(W*zoom),round(H*zoom); big=fit_cover(img,(zw,zh)); x,y=(zw-W)//2,(zh-H)//2
     frame=big.crop((x,y,x+W,y+H)).convert("RGB")
-    cy={"upper":H*.28,"center":H*.50,"lower":H*.72}.get(cfg["render"].get("caption_position","center"),H*.50)
+
+    position=cfg["render"].get("caption_position","upper")
+    if position=="upper":
+        # Top-align the complete caption block so it stays above faces/bodies in
+        # the typical family-photo composition instead of crossing the child.
+        caption_y=int(H*float(cfg["render"].get("caption_top",0.07)))
+        anchor="top"
+    else:
+        caption_y={"center":H*.50,"lower":H*.72}.get(position,H*.50)
+        anchor="center"
+
     if "lines" in c:
         role=str(cfg.get("role","")).lower()
         intro_map={
@@ -113,9 +127,9 @@ def make_frame(img,cfg,c,t):
             "chachi":"Chachi har samay kehti rehti hain...",
         }
         intro=intro_map.get(role)
-        draw_caption(frame,c["lines"],cy,int(cfg["render"].get("font_size",50)),int(cfg["render"].get("stroke_width",4)),intro)
+        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",46)),int(cfg["render"].get("stroke_width",3)),intro,anchor)
     else:
-        draw_caption(frame,[c["text"]],cy,int(cfg["render"].get("font_size",50)),int(cfg["render"].get("stroke_width",4)))
+        draw_caption(frame,[c["text"]],caption_y,int(cfg["render"].get("font_size",46)),int(cfg["render"].get("stroke_width",3)),None,anchor)
     return frame
 
 def music_path(cfg):
