@@ -35,10 +35,11 @@ def wrap(draw,text,fnt,max_width):
 def draw_caption(frame,text,y,size,stroke,emphasis):
     draw=ImageDraw.Draw(frame)
     lines=text.split("\n") if "\n" in text else [text]
-    # Keep each caption on exactly one visual line. Reduce the font uniformly
-    # until the longest line fits inside a safe 90% of the frame width.
+    # Left-align the complete caption block. Keep each source caption on one
+    # visual line and add a larger section gap after every 3 lines.
     requested=int(size*(1.10 if emphasis else 1))
-    max_width=int(frame.width*0.90)
+    side_margin=int(frame.width*0.06)
+    max_width=frame.width-(side_margin*2)
     font_size=requested
     while font_size>24:
         fnt=ImageFont.truetype(font_path(),font_size)
@@ -47,16 +48,17 @@ def draw_caption(frame,text,y,size,stroke,emphasis):
             break
         font_size-=2
     fnt=ImageFont.truetype(font_path(),font_size)
-    gap=max(16,int(font_size*0.28))
-    heights=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)[3] for line in lines]
-    line_h=max(heights,default=font_size)
-    total=len(lines)*line_h+(len(lines)-1)*gap
+    line_gap=max(8,int(font_size*0.14))
+    section_gap=max(28,int(font_size*0.45))
+    boxes=[draw.textbbox((0,0),line,font=fnt,stroke_width=stroke) for line in lines]
+    heights=[b[3]-b[1] for b in boxes]
+    gaps=[section_gap if (i+1)%3==0 and i<len(lines)-1 else line_gap for i in range(len(lines)-1)]
+    total=sum(heights)+sum(gaps)
     yy=y-total/2
-    for line in lines:
-        box=draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)
-        x=(frame.width-(box[2]-box[0]))/2
-        draw.text((x,yy),line,font=fnt,fill="white",stroke_width=stroke,stroke_fill="black")
-        yy+=line_h+gap
+    for i,line in enumerate(lines):
+        draw.text((side_margin,yy),line,font=fnt,fill="white",stroke_width=stroke,stroke_fill="black")
+        if i<len(lines)-1:
+            yy+=heights[i]+gaps[i]
 
 def make_frame(img,cfg,c,t):
     W,H=cfg["resolution"]; duration=float(cfg["duration_seconds"])
