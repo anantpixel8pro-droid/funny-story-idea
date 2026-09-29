@@ -32,71 +32,47 @@ def wrap(draw,text,fnt,max_width):
     if cur: out.append(cur)
     return out or [text]
 
-def draw_caption(frame, lines, y, size, stroke, intro=None, anchor="center"):
+def draw_caption(frame, lines, y, size, stroke, intro=None, anchor="center", line_gap=10, intro_gap=10):
     draw=ImageDraw.Draw(frame)
-    side_margin=int(frame.width*0.06)
+    side_margin=int(frame.width*0.05)
     max_width=frame.width-(side_margin*2)
-
-    # Keep captions comfortably readable. The JSON files historically used 62px,
-    # but that is too large once all lines are visible together on a 9:16 frame.
-    font_size=min(int(size), 46)
-    font_size=max(font_size, 34)
-    fnt=ImageFont.truetype(font_path(),font_size)
+    fnt=ImageFont.truetype(font_path(),int(size))
 
     def wrap_line(text):
-        # Preserve normal lines as one line. Only wrap when the complete sentence
-        # genuinely cannot fit inside the safe text width.
-        words=text.split()
-        wrapped=[]
-        cur=""
+        words=text.split(); wrapped=[]; cur=""
         for word in words:
             candidate=word if not cur else cur+" "+word
             if draw.textbbox((0,0),candidate,font=fnt,stroke_width=stroke)[2] <= max_width:
                 cur=candidate
             else:
-                if cur:
-                    wrapped.append(cur)
+                if cur: wrapped.append(cur)
                 cur=word
-        if cur:
-            wrapped.append(cur)
+        if cur: wrapped.append(cur)
         return wrapped or [""]
 
     paragraphs=[]
-    if intro:
-        paragraphs.append(("intro", wrap_line(intro)))
-    for line in lines:
-        paragraphs.append(("line", wrap_line(line)))
+    if intro: paragraphs.append(("intro",wrap_line(intro)))
+    for line in lines: paragraphs.append(("line",wrap_line(line)))
+    items=[]
+    for kind,wrapped in paragraphs:
+        for j,line in enumerate(wrapped): items.append((kind,j,len(wrapped),line))
 
-    line_gap=30
-    intro_gap=42
-    wrapped_lines=[]
-    for kind, wrapped in paragraphs:
-        for j,line in enumerate(wrapped):
-            wrapped_lines.append((kind,j,len(wrapped),line))
+    bbox=draw.textbbox((0,0),"Ag",font=fnt,stroke_width=stroke)
+    line_height=bbox[3]-bbox[1]
+    total=sum(line_height for _ in items)
+    for kind,j,count,_ in items[:-1]:
+        if j==count-1: total += intro_gap if kind=="intro" else line_gap
+    yy=y if anchor=="top" else y-total/2
 
-    line_height=max(draw.textbbox((0,0),"Ag",font=fnt,stroke_width=stroke)[3],font_size)
-    total=sum(line_height for _ in wrapped_lines)
-    for kind,j,count,_ in wrapped_lines[:-1]:
-        if j==count-1:
-            total += intro_gap if kind=="intro" else line_gap
-
-    if anchor=="top":
-        yy=y
-    else:
-        yy=y-total/2
-
-    for index,(kind,j,count,line) in enumerate(wrapped_lines):
-        # A compact shadow keeps white text readable on both bright walls and faces
-        # without adding a heavy caption box over the photograph.
-        draw.text((side_margin+2,yy+2),line,font=fnt,fill="black",
-                  stroke_width=max(2,stroke-1),stroke_fill="black")
-        draw.text((side_margin,yy),line,font=fnt,fill="white",
-                  stroke_width=stroke,stroke_fill="black")
+    for idx,(kind,j,count,line) in enumerate(items):
+        bbox=draw.textbbox((0,0),line,font=fnt,stroke_width=stroke)
+        text_width=bbox[2]-bbox[0]
+        xx=(frame.width-text_width)/2 if anchor=="center" else side_margin
+        draw.text((xx+2,yy+2),line,font=fnt,fill="black",stroke_width=max(2,stroke-1),stroke_fill="black")
+        draw.text((xx,yy),line,font=fnt,fill="white",stroke_width=stroke,stroke_fill="black")
         yy += line_height
-        if j < count-1:
-            yy += 6
-        elif index < len(wrapped_lines)-1:
-            yy += intro_gap if kind=="intro" else line_gap
+        if j < count-1: yy += 4
+        elif idx < len(items)-1: yy += intro_gap if kind=="intro" else line_gap
 
 
 def make_frame(img,cfg,c,t):
@@ -104,32 +80,17 @@ def make_frame(img,cfg,c,t):
     z0=float(cfg["render"].get("zoom_start",1)); z1=float(cfg["render"].get("zoom_end",1.08)); zoom=z0+(z1-z0)*(t/duration)
     zw,zh=round(W*zoom),round(H*zoom); big=fit_cover(img,(zw,zh)); x,y=(zw-W)//2,(zh-H)//2
     frame=big.crop((x,y,x+W,y+H)).convert("RGB")
-
-    position=cfg["render"].get("caption_position","upper")
-    if position=="upper":
-        # Top-align the complete caption block so it stays above faces/bodies in
-        # the typical family-photo composition instead of crossing the child.
-        caption_y=int(H*float(cfg["render"].get("caption_top",0.07)))
-        anchor="top"
-    else:
-        caption_y={"center":H*.50,"lower":H*.72}.get(position,H*.50)
-        anchor="center"
-
+    position=cfg["render"].get("caption_position","center")
+    if position=="center": caption_y=int(H*float(cfg["render"].get("caption_center",0.50))); anchor="center"
+    elif position=="upper": caption_y=int(H*float(cfg["render"].get("caption_top",0.07))); anchor="top"
+    else: caption_y={"lower":H*.72}.get(position,H*.50); anchor="center"
     if "lines" in c:
         role=str(cfg.get("role","")).lower()
-        intro_map={
-            "mom":"Mummy har samay kehti rehti hai...",
-            "dad":"Papa har samay kehte rehte hain...",
-            "dadi":"Dadi har samay kehti rehti hain...",
-            "nani":"Nani har samay kehti rehti hain...",
-            "dada":"Dada har samay kehte rehte hain...",
-            "nana":"Nana har samay kehte rehte hain...",
-            "chachi":"Chachi har samay kehti rehti hain...",
-        }
-        intro=intro_map.get(role)
-        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",46)),int(cfg["render"].get("stroke_width",3)),intro,anchor)
+        intro_map={"mom":"Mummy har samay kehti rehti hai...","dad":"Papa har samay kehte rehte hain...","dadi":"Dadi har samay kehti rehti hain...","nani":"Nani har samay kehti rehti hain...","dada":"Dada har samay kehte rehte hain...","nana":"Nana har samay kehte rehte hain...","chachi":"Chachi har samay kehti rehti hain..."}
+        intro=intro_map.get(role) if cfg["render"].get("show_intro",True) else None
+        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",54)),int(cfg["render"].get("stroke_width",4)),intro,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
     else:
-        draw_caption(frame,[c["text"]],caption_y,int(cfg["render"].get("font_size",46)),int(cfg["render"].get("stroke_width",3)),None,anchor)
+        draw_caption(frame,[c["text"]],caption_y,int(cfg["render"].get("font_size",54)),int(cfg["render"].get("stroke_width",4)),None,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
     return frame
 
 def music_path(cfg):
