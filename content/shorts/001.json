@@ -57,11 +57,11 @@
     "prompt": "playful bouncy family comedy instrumental, light marimba and pizzicato, mischievous but warm, no vocals, no recognizable melody, seamless 10 second loop"
   },
   "render": {
-    "zoom_start": 1,
-    "zoom_end": 1.08,
+    "zoom_start": 1.04,
+    "zoom_end": 1.12,
     "caption_position": "center",
-    "font_size": 54,
-    "stroke_width": 4,
+    "font_size": 66,
+    "stroke_width": 5,
     "caption_top": 0.07,
     "caption_center": 0.5,
     "show_intro": false,

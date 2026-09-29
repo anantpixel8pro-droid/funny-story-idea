@@ -10,18 +10,18 @@ def run(cmd):
     print("+"," ".join(shlex.quote(str(x)) for x in cmd)); subprocess.run([str(x) for x in cmd],check=True)
 
 def font_path():
-    # Use a true display face like the reference Reel.
-    # Prefer Impact/Anton/Oswald rather than Arial variants.
+    # Prefer a bundled Devanagari-capable condensed display face.
     for p in [
         os.getenv("SHORT_FONT"),
-        "/Library/Fonts/Impact.ttf",
-        "/System/Library/Fonts/Supplemental/Impact.ttf",
-        "/Library/Fonts/Anton-Regular.ttf",
-        "/Library/Fonts/Oswald-Bold.ttf",
-        "/System/Library/Fonts/Supplemental/Arial Black.ttf",
-        "/Library/Fonts/Arial Black.ttf",
+        str(ROOT/"assets/fonts/NotoSansDevanagari[wdth,wght].ttf"),
         "/System/Library/Fonts/Supplemental/Arial Narrow Bold.ttf",
         "/Library/Fonts/Arial Narrow Bold.ttf",
+        "/Library/Fonts/Oswald-Bold.ttf",
+        "/Library/Fonts/Anton-Regular.ttf",
+        "/Library/Fonts/Impact.ttf",
+        "/System/Library/Fonts/Supplemental/Impact.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Black.ttf",
+        "/Library/Fonts/Arial Black.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf",
     ]:
         if p and Path(p).exists(): return p
@@ -46,7 +46,10 @@ def draw_caption(frame, lines, y, size, stroke, intro=None, anchor="center", lin
     draw=ImageDraw.Draw(frame)
     side_margin=int(frame.width*0.03)
     max_width=frame.width-(side_margin*2)
-    fnt=ImageFont.truetype(font_path(),int(size))
+    selected_font=font_path()
+    fnt=ImageFont.truetype(selected_font,int(size))
+    if Path(selected_font).resolve() == (ROOT/"assets/fonts/NotoSansDevanagari[wdth,wght].ttf").resolve():
+        fnt.set_variation_by_axes([700,76])
 
     def wrap_line(text):
         words=text.split(); wrapped=[]; cur=""
