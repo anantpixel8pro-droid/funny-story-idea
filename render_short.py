@@ -10,24 +10,22 @@ def run(cmd):
     print("+"," ".join(shlex.quote(str(x)) for x in cmd)); subprocess.run([str(x) for x in cmd],check=True)
 
 def font_path():
-    # The reference Reel uses a tall, condensed, bold face. Prefer Arial Narrow
-    # on macOS so the text stays readable while fitting long Hinglish lines.
+    # Use a true display face like the reference Reel.
+    # Prefer Impact/Anton/Oswald rather than Arial variants.
     for p in [
         os.getenv("SHORT_FONT"),
+        "/Library/Fonts/Impact.ttf",
+        "/System/Library/Fonts/Supplemental/Impact.ttf",
+        "/Library/Fonts/Anton-Regular.ttf",
+        "/Library/Fonts/Oswald-Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Black.ttf",
+        "/Library/Fonts/Arial Black.ttf",
         "/System/Library/Fonts/Supplemental/Arial Narrow Bold.ttf",
-        "/System/Library/Fonts/Supplemental/Arial Narrow.ttf",
         "/Library/Fonts/Arial Narrow Bold.ttf",
-        "/Library/Fonts/Arial Narrow.ttf",
-        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
-        "/System/Library/Fonts/Supplemental/Arial.ttf",
-        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
     ]:
         if p and Path(p).exists(): return p
-    raise FileNotFoundError("Set SHORT_FONT to a valid .ttf font.")
-
+    raise FileNotFoundError("Set SHORT_FONT to a display TTF such as Impact, Anton, or Oswald Bold.")
 def fit_cover(img,size):
     w,h=size; scale=max(w/img.width,h/img.height); nw,nh=round(img.width*scale),round(img.height*scale)
     img=img.resize((nw,nh),Image.Resampling.LANCZOS); x,y=(nw-w)//2,(nh-h)//2
@@ -100,7 +98,7 @@ def make_frame(img,cfg,c,t):
         role=str(cfg.get("role","")).lower()
         intro_map={"mom":"Mummy har samay kehti rehti hai...","dad":"Papa har samay kehte rehte hain...","dadi":"Dadi har samay kehti rehti hain...","nani":"Nani har samay kehti rehti hain...","dada":"Dada har samay kehte rehte hain...","nana":"Nana har samay kehte rehte hain...","chachi":"Chachi har samay kehti rehti hain..."}
         intro=intro_map.get(role) if cfg["render"].get("show_intro",True) else None
-        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",54)),int(cfg["render"].get("stroke_width",4)),intro,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
+        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",4)),intro,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
     else:
         draw_caption(frame,[c["text"]],caption_y,int(cfg["render"].get("font_size",54)),int(cfg["render"].get("stroke_width",4)),None,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
     return frame
