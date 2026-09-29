@@ -44,7 +44,7 @@ def wrap(draw,text,fnt,max_width):
 
 def draw_caption(frame, lines, y, size, stroke, intro=None, anchor="center", line_gap=10, intro_gap=10):
     draw=ImageDraw.Draw(frame)
-    side_margin=int(frame.width*0.05)
+    side_margin=int(frame.width*0.03)
     max_width=frame.width-(side_margin*2)
     fnt=ImageFont.truetype(font_path(),int(size))
 
@@ -98,7 +98,7 @@ def make_frame(img,cfg,c,t):
         role=str(cfg.get("role","")).lower()
         intro_map={"mom":"Mummy har samay kehti rehti hai...","dad":"Papa har samay kehte rehte hain...","dadi":"Dadi har samay kehti rehti hain...","nani":"Nani har samay kehti rehti hain...","dada":"Dada har samay kehte rehte hain...","nana":"Nana har samay kehte rehte hain...","chachi":"Chachi har samay kehti rehti hain..."}
         intro=intro_map.get(role) if cfg["render"].get("show_intro",True) else None
-        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",62)),int(cfg["render"].get("stroke_width",4)),intro,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
+        draw_caption(frame,c["lines"],caption_y,int(cfg["render"].get("font_size",78)),int(cfg["render"].get("stroke_width",5)),intro,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
     else:
         draw_caption(frame,[c["text"]],caption_y,int(cfg["render"].get("font_size",54)),int(cfg["render"].get("stroke_width",4)),None,anchor,int(cfg["render"].get("line_gap",10)),int(cfg["render"].get("intro_gap",10)))
     return frame
