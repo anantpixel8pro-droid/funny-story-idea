@@ -10,9 +10,21 @@ def run(cmd):
     print("+"," ".join(shlex.quote(str(x)) for x in cmd)); subprocess.run([str(x) for x in cmd],check=True)
 
 def font_path():
-    for p in [os.getenv("SHORT_FONT"),"/System/Library/Fonts/Supplemental/Arial.ttf",
-              "/System/Library/Fonts/Supplemental/Arial Unicode.ttf","/Library/Fonts/Arial.ttf",
-              "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf","/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"]:
+    # The reference Reel uses a tall, condensed, bold face. Prefer Arial Narrow
+    # on macOS so the text stays readable while fitting long Hinglish lines.
+    for p in [
+        os.getenv("SHORT_FONT"),
+        "/System/Library/Fonts/Supplemental/Arial Narrow Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Narrow.ttf",
+        "/Library/Fonts/Arial Narrow Bold.ttf",
+        "/Library/Fonts/Arial Narrow.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+    ]:
         if p and Path(p).exists(): return p
     raise FileNotFoundError("Set SHORT_FONT to a valid .ttf font.")
 
